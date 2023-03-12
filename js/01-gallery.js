@@ -28,19 +28,25 @@ const selectImg = (event) => {
     return;
   }
   const originalImg = event.target.dataset.source;
-  const instance = basicLightbox.create(
-    `<img src="${originalImg}" width="800" height="600">`
-  );
-
-  instance.show();
 
   const closeModal = (event) => {
     if (event.key === "Escape") {
       instance.close();
     }
   };
+  const instance = basicLightbox.create(
+    `<img src="${originalImg}" width="800" height="600">`,
+    {
+      onShow: () => {
+        document.addEventListener("keydown", closeModal);
+      },
+      onClose: () => {
+        document.removeEventListener("keydown", closeModal);
+      },
+    }
+  );
 
-  document.addEventListener("keydown", closeModal);
+  instance.show();
 };
 
 galleryList.addEventListener("click", selectImg);
